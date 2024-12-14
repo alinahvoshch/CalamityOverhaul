@@ -1,7 +1,11 @@
-﻿using SubworldLibrary;
+﻿using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
+using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.WorldBuilding;
+
 
 namespace CalamityOverhaul.Content.Subworlds.FogDungeons
 {
@@ -14,6 +18,13 @@ namespace CalamityOverhaul.Content.Subworlds.FogDungeons
         public static bool Active => SubworldSystem.IsActive<DungeonWorld>();
 
         public override List<GenPass> Tasks => [new FogDungeonGen()];
+
+        public static void Enter() => SubworldSystem.Enter<DungeonWorld>();
+
+        public override void OnEnter() {
+            SubworldSystem.noReturn = true;
+            SubworldSystem.hideUnderworld = false;
+        }
 
         public override void OnLoad() {
             Main.dayTime = true;
@@ -29,7 +40,9 @@ namespace CalamityOverhaul.Content.Subworlds.FogDungeons
         }
 
         public override void DrawMenu(GameTime gameTime) {
-            base.DrawMenu(gameTime);
+            Main.spriteBatch.Draw(CWRUtils.GetT2DValue(CWRConstant.Asset + "Sky/FogDungeonBack"), Vector2.Zero, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0); ;
+            DynamicSpriteFontExtensionMethods.DrawString(Main.spriteBatch, FontAssets.DeathText.Value, Main.statusText
+                , new Vector2(Main.screenWidth, Main.screenHeight) / 2 - FontAssets.DeathText.Value.MeasureString(Main.statusText) / 2, Color.White);
         }
 
         public override void DrawSetup(GameTime gameTime) {
