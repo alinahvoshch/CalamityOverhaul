@@ -38,9 +38,12 @@ namespace CalamityOverhaul.Content.RemakeItems.Melee
             Item.Calamity().donorItem = true;
             Item.shoot = ModContent.ProjectileType<SoulSeekerSkull>();
             Item.shootSpeed = 15;
-            Item.SetKnifeHeld<TheLastMourningHeld>();
+            Item.SetKnifeHeld<TheLastMourningHeld>(false);
         }
-
+        public override bool? Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source
+            , Vector2 position, Vector2 velocity, int type, int damage, float knockback) {
+            return ShootFunc(player, source, position, velocity, type, damage, knockback);
+        }
         public static bool ShootFunc(Player player, EntitySource_ItemUse_WithAmmo source
             , Vector2 position, Vector2 velocity, int type, int damage, float knockback) {
             if (player.altFunctionUse == 2) {
