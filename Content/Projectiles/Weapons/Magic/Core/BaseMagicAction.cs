@@ -5,6 +5,7 @@ namespace CalamityOverhaul.Content.Projectiles.Weapons.Magic.Core
     internal abstract class BaseMagicAction : BaseMagicGun
     {
         protected int useAnimation;
+        protected int reuseDelay;
         public sealed override void SetMagicProperty() {
             ShootPosToMouLengValue = 0;
             ShootPosNorlLengValue = 0;
@@ -17,14 +18,22 @@ namespace CalamityOverhaul.Content.Projectiles.Weapons.Magic.Core
             Recoil = 0;
         }
 
-        public override void Initialize() => useAnimation = Item.useAnimation;
+        public override void Initialize() {
+            useAnimation = Item.useAnimation;
+            reuseDelay = 0;
+        }
 
         public override bool CanSpanProj() {
+            if (--reuseDelay > 0) {
+                return false;
+            }
+
             bool reset = base.CanSpanProj();
             if (Item.useLimitPerAnimation.HasValue) {
                 if (fireIndex > Item.useLimitPerAnimation) {
                     if (--useAnimation <= 0) {
                         fireIndex = 0;
+                        reuseDelay = Item.reuseDelay;
                         return reset;
                     }
                     return false;
@@ -33,6 +42,7 @@ namespace CalamityOverhaul.Content.Projectiles.Weapons.Magic.Core
             else {
                 if (--useAnimation <= 0) {
                     fireIndex = 0;
+                    reuseDelay = Item.reuseDelay;
                     return reset;
                 }
                 return false;
